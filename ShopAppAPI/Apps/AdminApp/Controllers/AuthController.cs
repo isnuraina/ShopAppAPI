@@ -18,7 +18,7 @@ namespace ShopAppAPI.Apps.AdminApp.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             var existUser =await _userManager.FindByNameAsync(registerDto.UserName);
@@ -41,6 +41,7 @@ namespace ShopAppAPI.Apps.AdminApp.Controllers
             return StatusCode(201);
         }
 
+        [HttpPost("create-role")]
         public async Task<IActionResult> CreateRole()
         {
             if (!await _roleManager.RoleExistsAsync("member"))
@@ -54,14 +55,16 @@ namespace ShopAppAPI.Apps.AdminApp.Controllers
             return StatusCode(201);
         }
 
+        [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
             var user = await _userManager.FindByNameAsync(loginDto.UserName);
             if (user == null) return BadRequest();
-            var result =await _userManager.CheckPasswordAsync(user, loginDto.Password);
+            var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
             if (!result) return BadRequest();
             var token = "";
             return Ok(new { token = "" });
         }
+
     }
 }
